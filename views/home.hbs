@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Hệ Thống Quản Lý Sách</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-light: #EEF2FF;
+            --bg-main: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --danger: #EF4444;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header .logo-icon {
+            background: var(--primary);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+        }
+
+        .sidebar-header h1 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-main);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 260px);
+        }
+
+        .top-header {
+            height: 72px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-title h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .dashboard-content {
+            padding: 32px;
+            flex: 1;
+        }
+
+        /* --- STATS GRID --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.blue { background: #EEF2FF; color: #4F46E5; }
+        .stat-icon.green { background: #ECFDF5; color: #10B981; }
+        .stat-icon.orange { background: #FFF7ED; color: #F97316; }
+        .stat-icon.purple { background: #FAF5FF; color: #A855F7; }
+
+        .stat-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* --- MAIN GRID (FORM + TABLE) --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+        }
+
+        .card-header {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- FORM --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .form-control.error {
+            border-color: var(--danger);
+            background: #FEF2F2;
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        /* --- TABLE --- */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            background: #FAFAFA;
+        }
+
+        td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-main);
+        }
+
+        .badge-code {
+            background: var(--bg-main);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid var(--border);
+        }
+
+        .price-vat {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .action-btn:hover {
+            background: var(--border);
+            color: var(--text-main);
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 48px 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .empty-icon {
+            background: var(--primary-light);
+            color: var(--primary);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* --- FOOTER --- */
+        .compact-footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .vat-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: var(--surface);
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error { border-left-color: var(--danger); }
+        .toast.error .toast-icon { color: var(--danger); }
+        
+        .toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Spin animation for button */
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-wrapper { margin-left: 0; width: 100%; }
+            .top-header { padding: 0 16px; }
+            .dashboard-content { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">
+                <i data-lucide="library"></i>
+            </div>
+            <h1>CloudLibrary</h1>
+        </div>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item">
+                <i data-lucide="layout-dashboard" size="18"></i>
+                Tổng quan
+            </a>
+            <a href="#" class="nav-item active">
+                <i data-lucide="book-open" size="18"></i>
+                Quản lý sách
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="cloud" size="18"></i>
+                Dữ liệu Cloud
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="settings" size="18"></i>
+                Cài đặt
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-title">
+                <h2>Quản lý sách</h2>
+                <p>Quản lý và lưu trữ dữ liệu sách trên máy chủ MongoDB Atlas</p>
+            </div>
+            <div class="header-profile">
+                <div class="avatar">
+                    <i data-lucide="user" size="20"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <!-- Stat Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i data-lucide="books"></i></div>
+                    <div class="stat-info">
+                        <p>Tổng số sách</p>
+                        <h3 id="stat-total">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i data-lucide="banknote"></i></div>
+                    <div class="stat-info">
+                        <p>Tổng giá trị (Gốc)</p>
+                        <h3 id="stat-base-price">0 đ</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i data-lucide="receipt"></i></div>
+                    <div class="stat-info">
+                        <p>Giá trị sau VAT</p>
+                        <h3 id="stat-vat-price">0 đ</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple"><i data-lucide="activity"></i></div>
+                    <div class="stat-info">
+                        <p>Sách mới thêm</p>
+                        <h3 id="stat-new">+0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form & Table Grid -->
+            <div class="content-grid">
+                
+                <!-- Form Area -->
+                <div class="card form-area">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i data-lucide="plus-circle" size="20" style="color: var(--primary)"></i>
+                            Thêm sách mới
+                        </div>
+                    </div>
+                    
+                    <form id="addBookForm" action="/add" method="POST">
+                        <div class="form-group">
+                            <label class="form-label">Mã sản phẩm</label>
+                            <input type="text" name="maSP" class="form-control" placeholder="VD: {{PREFIX}}001" required autocomplete="off">
+                            <div class="input-hint">
+                                <i data-lucide="info" size="14"></i>
+                                Bắt buộc bắt đầu bằng <strong style="color: var(--primary); margin-left: 4px;">{{PREFIX}}</strong>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tên sách</label>
+                            <input type="text" name="tenSach" class="form-control" placeholder="Nhập tên sách..." required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Giá gốc (VNĐ)</label>
+                            <input type="number" name="giaGoc" class="form-control" placeholder="0" required min="1">
+                        </div>
+
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <i data-lucide="cloud-upload" size="18"></i>
+                            Lưu xuống Cloud
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Table Area -->
+                <div class="card table-area">
+                    <div class="card-header" style="margin-bottom: 0;">
+                        <div class="card-title">
+                            <i data-lucide="table" size="20" style="color: var(--text-muted)"></i>
+                            Danh sách dữ liệu
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã SP</th>
+                                    <th>Tên Sách</th>
+                                    <th>Giá Gốc</th>
+                                    <th>Giá Sau Thuế</th>
+                                    <th style="width: 50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each books}}
+                                <tr class="book-row">
+                                    <td><span class="badge-code">{{this.maSP}}</span></td>
+                                    <td style="font-weight: 500; color: var(--text-main);">{{this.tenSach}}</td>
+                                    <td class="raw-price" data-value="{{this.giaGoc}}">{{this.giaGoc}}</td>
+                                    <td class="raw-price price-vat" data-value="{{this.giaSauThue}}">{{this.giaSauThue}}</td>
+                                    <td>
+                                        <button class="action-btn" title="Thao tác (Chưa hỗ trợ)">
+                                            <i data-lucide="more-horizontal" size="18"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{else}}
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">
+                                                <i data-lucide="book-dashed" size="32"></i>
+                                            </div>
+                                            <h4>Chưa có dữ liệu sách</h4>
+                                            <p>Hãy thêm một cuốn sách mới từ form bên cạnh để bắt đầu lưu trữ.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="compact-footer">
+                <div>Sinh viên thực hiện: <strong>{{HO_TEN}}</strong> · MSSV: <strong>{{MSSV}}</strong></div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    Thuế suất hệ thống: <span class="vat-badge">VAT {{VAT_RATE}}%</span>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Toast Notifications Area -->
+    <div id="toast-container"></div>
+
+    <!-- Logic Script -->
+    <script>
+        // 1. Khởi tạo Icons
+        lucide.createIcons();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const prefix = "{{PREFIX}}";
+            
+            // 2. Format Tiền & Tính toán Thống kê (Client-side logic)
+            let totalBooks = 0;
+            let totalBase = 0;
+            let totalVat = 0;
+
+            const rows = document.querySelectorAll('.book-row');
+            totalBooks = rows.length;
+
+            rows.forEach(row => {
+                const priceElements = row.querySelectorAll('.raw-price');
+                const baseVal = parseFloat(priceElements[0].getAttribute('data-value')) || 0;
+                const vatVal = parseFloat(priceElements[1].getAttribute('data-value')) || 0;
+
+                totalBase += baseVal;
+                totalVat += vatVal;
+
+                // Format VNĐ
+                priceElements[0].textContent = baseVal.toLocaleString('vi-VN') + ' đ';
+                priceElements[1].textContent = vatVal.toLocaleString('vi-VN') + ' đ';
+            });
+
+            // Cập nhật card thống kê
+            document.getElementById('stat-total').textContent = totalBooks;
+            document.getElementById('stat-new').textContent = totalBooks > 0 ? '+1' : '0';
+            document.getElementById('stat-base-price').textContent = totalBase.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('stat-vat-price').textContent = totalVat.toLocaleString('vi-VN') + ' đ';
+
+            // 3. Xử lý UI/UX Form Validation & Loading
+            const form = document.getElementById('addBookForm');
+            const maSPInput = document.querySelector('input[name="maSP"]');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', (e) => {
+                if (!maSPInput.value.startsWith(prefix)) {
+                    e.preventDefault(); // Chặn gửi form
+                    maSPInput.classList.add('error');
+                    maSPInput.focus();
+                    showToast(`Lỗi: Mã sản phẩm bắt buộc phải bắt đầu bằng ${prefix}`, 'error');
+                    return false;
+                }
+
+                // Hiệu ứng Loading khi qua validation
+                maSPInput.classList.remove('error');
+                submitBtn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Đang đồng bộ...`;
+                submitBtn.style.opacity = '0.8';
+                submitBtn.style.cursor = 'not-allowed';
+                lucide.createIcons();
+            });
+
+            // Hàm tạo Toast Notification
+            function showToast(message, type = 'success') {
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                const icon = type === 'error' ? 'alert-circle' : 'check-circle';
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i data-lucide="${icon}"></i>
+                    </div>
+                    <div class="toast-title">${message}</div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                lucide.createIcons();
+
+                // Kích hoạt animation trượt vào
+                setTimeout(() => toast.classList.add('show'), 100);
+
+                // Tự động tắt sau 3.5 giây
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            }
+            
+            // Xóa viền đỏ khi người dùng bắt đầu gõ lại
+            maSPInput.addEventListener('input', () => {
+                if(maSPInput.classList.contains('error')) {
+                    maSPInput.classList.remove('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

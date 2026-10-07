@@ -41,95 +41,32 @@
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 260px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-            transition: transform 0.3s ease;
         }
 
-        .sidebar-header {
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-header .logo-icon {
-            background: var(--primary);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            display: flex;
-        }
-
-        .sidebar-header h1 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
-        }
-
-        .nav-menu {
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .nav-item:hover {
-            background: var(--bg-main);
-            color: var(--text-main);
-        }
-
-        .nav-item.active {
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-
-        /* --- MAIN CONTENT --- */
+        /* --- MAIN CONTENT (Full Width) --- */
         .main-wrapper {
-            flex: 1;
-            margin-left: 260px;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            width: calc(100% - 260px);
+            padding: 0 24px;
         }
 
         .top-header {
-            height: 72px;
+            height: 80px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 32px;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 32px;
             position: sticky;
             top: 0;
             z-index: 90;
@@ -138,6 +75,9 @@
         .header-title h2 {
             font-size: 20px;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .header-title p {
@@ -165,7 +105,7 @@
         }
 
         .dashboard-content {
-            padding: 32px;
+            padding-bottom: 40px;
             flex: 1;
         }
 
@@ -218,7 +158,7 @@
         /* --- MAIN GRID (FORM + TABLE) --- */
         .content-grid {
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 380px 1fr;
             gap: 24px;
             align-items: start;
         }
@@ -374,11 +314,6 @@
             border-radius: 4px;
         }
 
-        .action-btn:hover {
-            background: var(--border);
-            color: var(--text-main);
-        }
-
         /* Empty State */
         .empty-state {
             padding: 48px 24px;
@@ -414,13 +349,16 @@
         /* --- FOOTER --- */
         .compact-footer {
             margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
+            padding: 20px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 13px;
             color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
         }
 
         .vat-badge {
@@ -470,63 +408,29 @@
             color: var(--text-main);
         }
 
-        /* Spin animation for button */
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
             .content-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-wrapper { margin-left: 0; width: 100%; }
-            .top-header { padding: 0 16px; }
-            .dashboard-content { padding: 16px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-icon">
-                <i data-lucide="library"></i>
-            </div>
-            <h1>CloudLibrary</h1>
-        </div>
-        <nav class="nav-menu">
-            <a href="#" class="nav-item">
-                <i data-lucide="layout-dashboard" size="18"></i>
-                Tổng quan
-            </a>
-            <a href="#" class="nav-item active">
-                <i data-lucide="book-open" size="18"></i>
-                Quản lý sách
-            </a>
-            <a href="#" class="nav-item">
-                <i data-lucide="cloud" size="18"></i>
-                Dữ liệu Cloud
-            </a>
-            <a href="#" class="nav-item">
-                <i data-lucide="settings" size="18"></i>
-                Cài đặt
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-wrapper">
+    <!-- Main Content (Không còn Sidebar, mở rộng toàn màn hình) -->
+    <div class="main-wrapper">
         <header class="top-header">
             <div class="header-title">
-                <h2>Quản lý sách</h2>
-                <p>Quản lý và lưu trữ dữ liệu sách trên máy chủ MongoDB Atlas</p>
+                <h2>
+                    <i data-lucide="library" style="color: var(--primary);"></i>
+                    Hệ thống Quản lý Sách Cloud
+                </h2>
+                <p>Cơ sở dữ liệu phân quyền Read/Write trên MongoDB Atlas</p>
             </div>
             <div class="header-profile">
-                <div class="avatar">
-                    <i data-lucide="user" size="20"></i>
+                <div class="avatar" title="Đã kết nối Cloud">
+                    <i data-lucide="cloud-check" size="20"></i>
                 </div>
             </div>
         </header>
@@ -558,8 +462,8 @@
                 <div class="stat-card">
                     <div class="stat-icon purple"><i data-lucide="activity"></i></div>
                     <div class="stat-info">
-                        <p>Sách mới thêm</p>
-                        <h3 id="stat-new">+0</h3>
+                        <p>Trạng thái Cloud</p>
+                        <h3 style="font-size: 16px; margin-top: 6px; color: var(--success);">Connected</h3>
                     </div>
                 </div>
             </div>
@@ -631,7 +535,7 @@
                                     <td class="raw-price" data-value="{{this.giaGoc}}">{{this.giaGoc}}</td>
                                     <td class="raw-price price-vat" data-value="{{this.giaSauThue}}">{{this.giaSauThue}}</td>
                                     <td>
-                                        <button class="action-btn" title="Thao tác (Chưa hỗ trợ)">
+                                        <button class="action-btn" title="Thao tác">
                                             <i data-lucide="more-horizontal" size="18"></i>
                                         </button>
                                     </td>
@@ -663,20 +567,17 @@
                 </div>
             </footer>
         </div>
-    </main>
+    </div>
 
     <!-- Toast Notifications Area -->
     <div id="toast-container"></div>
 
     <!-- Logic Script -->
     <script>
-        // 1. Khởi tạo Icons
         lucide.createIcons();
 
         document.addEventListener("DOMContentLoaded", () => {
             const prefix = "{{PREFIX}}";
-            
-            // 2. Format Tiền & Tính toán Thống kê (Client-side logic)
             let totalBooks = 0;
             let totalBase = 0;
             let totalVat = 0;
@@ -692,32 +593,27 @@
                 totalBase += baseVal;
                 totalVat += vatVal;
 
-                // Format VNĐ
                 priceElements[0].textContent = baseVal.toLocaleString('vi-VN') + ' đ';
                 priceElements[1].textContent = vatVal.toLocaleString('vi-VN') + ' đ';
             });
 
-            // Cập nhật card thống kê
             document.getElementById('stat-total').textContent = totalBooks;
-            document.getElementById('stat-new').textContent = totalBooks > 0 ? '+1' : '0';
             document.getElementById('stat-base-price').textContent = totalBase.toLocaleString('vi-VN') + ' đ';
             document.getElementById('stat-vat-price').textContent = totalVat.toLocaleString('vi-VN') + ' đ';
 
-            // 3. Xử lý UI/UX Form Validation & Loading
             const form = document.getElementById('addBookForm');
             const maSPInput = document.querySelector('input[name="maSP"]');
             const submitBtn = document.getElementById('submitBtn');
 
             form.addEventListener('submit', (e) => {
                 if (!maSPInput.value.startsWith(prefix)) {
-                    e.preventDefault(); // Chặn gửi form
+                    e.preventDefault();
                     maSPInput.classList.add('error');
                     maSPInput.focus();
                     showToast(`Lỗi: Mã sản phẩm bắt buộc phải bắt đầu bằng ${prefix}`, 'error');
                     return false;
                 }
 
-                // Hiệu ứng Loading khi qua validation
                 maSPInput.classList.remove('error');
                 submitBtn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Đang đồng bộ...`;
                 submitBtn.style.opacity = '0.8';
@@ -725,7 +621,6 @@
                 lucide.createIcons();
             });
 
-            // Hàm tạo Toast Notification
             function showToast(message, type = 'success') {
                 const toastContainer = document.getElementById('toast-container');
                 const toast = document.createElement('div');
@@ -743,17 +638,13 @@
                 toastContainer.appendChild(toast);
                 lucide.createIcons();
 
-                // Kích hoạt animation trượt vào
                 setTimeout(() => toast.classList.add('show'), 100);
-
-                // Tự động tắt sau 3.5 giây
                 setTimeout(() => {
                     toast.classList.remove('show');
                     setTimeout(() => toast.remove(), 300);
                 }, 3500);
             }
             
-            // Xóa viền đỏ khi người dùng bắt đầu gõ lại
             maSPInput.addEventListener('input', () => {
                 if(maSPInput.classList.contains('error')) {
                     maSPInput.classList.remove('error');

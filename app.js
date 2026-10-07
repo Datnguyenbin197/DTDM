@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 const MSSV = "23IT050";
 const HO_TEN = "Nguyễn Quốc Đạt";
 const PREFIX = MSSV.slice(-3);
-const VAT_RATE = parseInt(MSSV.slice(-1)) + 5;
+const VAT_RATE = parseInt(MSSV.slice(-1)) + 4;
 
 app.engine("hbs", engine({ extname: ".hbs", defaultLayout: false }));
 app.set("view engine", "hbs");
